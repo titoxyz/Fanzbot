@@ -1,0 +1,33 @@
+{
+  "name": "esempe-md",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgusXzz/ESEMPE-MD.git"
+  },
+  "author": "AgusXzz",
+  "bugs": {
+    "url": "https://github.com/AgusXzz/ESEMPE-MD/issues"
+  },
+  "homepage": "https://github.com/AgusXzz/ESEMPE-MD#readme",
+  "license": "ISC",
+  "keywords": [
+    "termux-whatsapp-bot",
+    "whatsapp-bot",
+    "whatsapp",
+    "js-whatsapp",
+    "whatsapp",
+    "multi-device",
+    "MD",
+    "baileys-md"
+    ],
+  "dependencies": {
+    "baileys": "6.7.19"
+  }
+}
