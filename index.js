@@ -3,17 +3,18 @@ import('./config.js')
 import makeWASocket, {
     Browsers,
     DisconnectReason,
-    delay,
-    downloadMediaMessage,
-    jidNormalizedUser,
     useMultiFileAuthState,
     makeCacheableSignalKeyStore
 } from 'baileys';
 import { Boom } from '@hapi/boom';
-import pino from 'pino';
 import fs from 'fs';
+import pino from 'pino';
 
 import color from './lib/color.js';
+import PluginsLoad from './lib/loadPlugins.js';
+import serialize, { Client } from './lib/serialize.js';
+
+const loader = new PluginsLoad('./plugins');
 
 async function startWA() {
     const { state, saveCreds } = await useMultiFileAuthState('sessions');
@@ -28,7 +29,11 @@ async function startWA() {
         markOnlineOnConnect: false,
         generateHighQualityLinkPreview: true,
     });
-    conn.ev.on('creds.update', saveCreds);
+
+    await Client(conn)
+
+    await loader.load();
+    conn.plugins = loader.plugins;
 
     if (!conn.chats) conn.chats = {}
 
@@ -42,31 +47,6 @@ async function startWA() {
             }
         }, 3000);
     }
-
-    conn.downloadMedia = async (msg) => {
-        return await downloadMediaMessage(msg, 'buffer', {}, {
-            logger: pino({ timestamp: () => `,"time":"${new Date().toJSON()}"`, level: 'fatal' }),
-            reuploadRequest: conn.updateMediaMessage,
-        });
-    };
-
-    conn.getJid = async (sender, groupId) => {
-        if (!sender.endsWith("@lid") || !groupId.endsWith("@g.us")) return sender;
-
-        conn.isLid = conn.isLid || {};
-        if (conn.isLid[sender]) return conn.isLid[sender];
-
-        const metadata = (conn.chats[groupId] || {}).metadata || await conn.groupMetadata(groupId).catch(() => null);
-        const participant = metadata?.participants?.find(p => p.id === sender);
-
-        return conn.isLid[sender] = participant?.jid;
-    };
-
-    conn.insertAllGroup = async () => {
-        const groups = await conn.groupFetchAllParticipating().catch(_ => null) || {}
-        for (const group in groups) conn.chats[group] = { ...(conn.chats[group] || {}), id: group, subject: groups[group].subject, isChats: true, metadata: groups[group] }
-        return conn.chats
-    };
 
     conn.ev.on('connection.update', async ({ connection, lastDisconnect }) => {
         if (connection) console.log(color.yellow(`[+] Connection Status : ${connection}`))
@@ -117,26 +97,10 @@ async function startWA() {
         }
     });
 
-    conn.ev.on('messages.upsert', async ({ messages }) => {
-        if (!messages[0]) return;
-
-        let m = await (await import(`./lib/serialize.js?v=${Date.now()}`)).default(conn, messages[0]);
-
-        if(m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return
-        if (m.message && !m.isBot) {
-            let name = m.isGroup ? m.metadata?.subject || 'Unknown' : m.pushname
-            console.log(color.cyan(' - FROM'), color.cyan(name), color.blueBright(m.chat));
-            console.log(color.yellowBright(' - CHAT'), color.yellowBright(m.isGroup ? `Grup (${m.sender} : ${name})` : 'Pribadi'));
-            console.log(color.greenBright(' - PESAN'), color.greenBright(m.body || m.type));
-            console.log(color.magentaBright('-'.repeat(40)))
-        }
-
-        await (await import(`./case.js?v=${Date.now()}`)).default(conn, m);
-    });
+    conn.ev.on('creds.update', saveCreds);
 
     conn.ev.on('group-participants.update', async ({ id, participants, action }) => {
         if (!id) return
-        id = jidNormalizedUser(id)
         if (id === 'status@broadcast') return
         if (!(id in conn.chats)) conn.chats[id] = { id }
         let chats = conn.chats[id]
@@ -150,7 +114,7 @@ async function startWA() {
     conn.ev.on('groups.update', async (groupsUpdates) => {
         try {
             for (const update of groupsUpdates) {
-                const id = jidNormalizedUser(update.id)
+                const id = update.id
                 if (!id || id === 'status@broadcast') continue
                 const isGroup = id.endsWith('@g.us')
                 if (!isGroup) continue
@@ -164,6 +128,23 @@ async function startWA() {
         } catch (e) {
             console.error(e)
         }
+    });
+
+    conn.ev.on('messages.upsert', async ({ messages }) => {
+        if (!messages[0]) return;
+
+        let m = await serialize(conn, messages[0]);
+
+        if(m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return
+        if (m.message && !m.isBot) {
+            let name = m.isGroup ? m.metadata?.subject || 'Unknown' : m.pushname
+            console.log(color.cyan(' - FROM'), color.cyan(name), color.blueBright(m.chat));
+            console.log(color.yellowBright(' - CHAT'), color.yellowBright(m.isGroup ? `Grup (${m.sender} : ${name})` : 'Pribadi'));
+            console.log(color.greenBright(' - PESAN'), color.greenBright(m.body || m.type));
+            console.log(color.magentaBright('-'.repeat(40)))
+        }
+
+        await (await import(`./handler.js?v=${Date.now()}`)).default(conn, m, conn.plugins);
     });
 
 }

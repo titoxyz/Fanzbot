@@ -46,12 +46,21 @@ ESEMPE-MD adalah bot WhatsApp Multi-Device yang sederhana dan ringan.
 ## Struktur direktori (contoh)
 ```
 ESEMPE-MD/
-├─ lib/
-│  └─ serialize.js
-├─ case.js
-├─ config.js
-├─ index.js
-└─ package.json
+├── lib
+│ ├── api.js
+│ ├── color.js
+│ ├── exif.js
+│ ├── function.js
+│ ├── loadPlugins.js
+│ └── serialize.js
+├── plugins
+│ ├── downloader
+│ ├── tools
+│ └── utility
+├── config.js
+├── handler.js
+├── index.js
+├── package.json
 ```
 
 ---
@@ -74,6 +83,10 @@ Repo: https://github.com/AgusXzz/ESEMPE-MD
 ## Thanks To
 [![Dika Ardnt](https://github.com/DikaArdnt.png?size=100)](https://github.com/DikaArdnt)
 [![WhiskeySockets](https://github.com/WhiskeySockets.png?size=100)](https://github.com/WhiskeySockets/Baileys)
+
+## Contributor
+[![Agus](https://github.com/AgusXzz.png?size=100)](https://github.com/AgusXzz)
+[![Senn](https://github.com/purrbits.png?size=100)](https://github.com/purrbits)
 
 ---
 Terima kasih sudah menggunakan ESEMPE-MD!
