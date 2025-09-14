@@ -8,7 +8,7 @@ import Func from './lib/function.js';
 
 export default async function Command(conn, m, plugins) {
   let quoted = m.isQuoted ? m.quoted : m;
-  let downloadM = async (filename) => await conn.downloadMedia(quoted, filename);
+  let downloadM = async (filename) => await conn.downloadMediaMessage(quoted, filename);
   let isCommand = m.prefix && m.body.startsWith(m.prefix) || false;
   const isOwner = m.fromMe || ownerNumber.includes(m.sender.split('@')[0]);
 
