@@ -6,7 +6,7 @@ import cp from 'child_process'
 import Api from './lib/api.js';
 import Func from './lib/function.js';
 
-export default async function Command(conn, m, plugins) {
+export default async function Command(conn, m) {
   let quoted = m.isQuoted ? m.quoted : m;
   let downloadM = async (filename) => await conn.downloadMediaMessage(quoted, filename);
   let isCommand = m.prefix && m.body.startsWith(m.prefix) || false;
@@ -15,7 +15,7 @@ export default async function Command(conn, m, plugins) {
   if (!mode && !isOwner) return;
 
   // === LOOPING PLUGINS ===
-  for (const anu of Object.values(plugins)) {
+  for (const anu of Object.values(conn.plugins)) {
     // EVENT LISTENER
     if (typeof anu.on === "function") {
       try {

@@ -137,14 +137,14 @@ async function startWA() {
 
         if(m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return
         if (m.message && !m.isBot) {
-            let name = m.isGroup ? m.metadata?.subject || 'Unknown' : m.pushname
+            let name = m.isGroup ? conn.chats[m.chat].subject || 'Unknown' : m.pushname
             console.log(color.cyan(' - FROM'), color.cyan(name), color.blueBright(m.chat));
             console.log(color.yellowBright(' - CHAT'), color.yellowBright(m.isGroup ? `Grup (${m.sender} : ${name})` : 'Pribadi'));
             console.log(color.greenBright(' - PESAN'), color.greenBright(m.body || m.type));
             console.log(color.magentaBright('-'.repeat(40)))
         }
 
-        await (await import(`./handler.js?v=${Date.now()}`)).default(conn, m, conn.plugins);
+        await (await import(`./handler.js?v=${Date.now()}`)).default(conn, m);
     });
 
 }
