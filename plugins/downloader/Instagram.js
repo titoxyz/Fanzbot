@@ -13,7 +13,7 @@ export default {
             if (!parseUrl) {
                 return m.reply(
                     `# Cara Penggunaan\n\n` +
-                    `> Masukkan URL TikTok untuk mengunduh konten\n\n` +
+                    `> Masukkan URL Instagram untuk mengunduh konten\n\n` +
                     `# Contoh Penggunaan\n` +
                     `> *${m.cmd} https://www.instagram.com/*`
                 );
