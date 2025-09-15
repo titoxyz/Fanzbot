@@ -149,4 +149,4 @@ async function startWA() {
 }
 
 startWA();
-//process.on('uncaughtException', console.error);
+process.on('uncaughtException', console.error);
