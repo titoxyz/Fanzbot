@@ -12,7 +12,7 @@
     "url": "git+https://github.com/AgusXzz/ESEMPE-MD.git"
   },
   "imports": {
-     "#lib/*": "./lib/*"
+    "#lib/*": "./lib/*"
   },
   "author": "AgusXzz",
   "bugs": {
@@ -31,7 +31,7 @@
     "baileys-md"
   ],
   "dependencies": {
-    "baileys": "6.7.19",
+    "baileys": "^6.7.19",
     "chokidar": "^4.0.3",
     "file-type": "^17.1.1",
     "fluent-ffmpeg": "^2.1.3",

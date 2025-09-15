@@ -40,8 +40,8 @@ async function startWA() {
     if (!conn.authState.creds.registered) {
         setTimeout(async () => {
             try {
-                const code = await conn.requestPairingCode(PAIRING_NUMBER);
-                console.log(color.green(`Kode Pairing: ${code?.match(/.{1,4}/g)?.join('-')}`))
+                const code = await conn.requestPairingCode(PAIRING_NUMBER, 'ESEMPEMD');
+                console.log(color.green(`Kode Pairing: ${code}`))
             } catch (err) {
                 console.log(color.red('[+] Gagal mengambil pairing code:'), err)
             }
@@ -135,11 +135,10 @@ async function startWA() {
 
         let m = await serialize(conn, messages[0]);
 
-        if(m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return
+        if (m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return;
         if (m.message && !m.isBot) {
-            let name = m.isGroup ? conn.chats[m.chat].subject || 'Unknown' : m.pushname
-            console.log(color.cyan(' - FROM'), color.cyan(name), color.blueBright(m.chat));
-            console.log(color.yellowBright(' - CHAT'), color.yellowBright(m.isGroup ? `Grup (${m.sender} : ${name})` : 'Pribadi'));
+            console.log(color.cyan(' - FROM'), color.cyan(conn.chats[m.chat]?.subject), color.blueBright(m.chat));
+            console.log(color.yellowBright(' - CHAT'), color.yellowBright(m.isGroup ? `Grup (${m.sender} : ${m.pushname})` : 'Pribadi'));
             console.log(color.greenBright(' - PESAN'), color.greenBright(m.body || m.type));
             console.log(color.magentaBright('-'.repeat(40)))
         }
@@ -150,4 +149,4 @@ async function startWA() {
 }
 
 startWA();
-process.on('uncaughtException', console.error);
+//process.on('uncaughtException', console.error);
