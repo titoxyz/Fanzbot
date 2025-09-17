@@ -39,9 +39,8 @@ export default async function Command(conn, m) {
 
             try {
                 if (isCmd) {
-
-                    const metadata = m.isGroup ? (conn.chats[m.chat] || {}).metadata || await conn.groupMetadata(m.chat).catch(_ => null) : {}
-                    const groupAdmins = m.isGroup && (metadata.participants.reduce((memberAdmin, memberNow) => (memberNow.admin ? memberAdmin.push({ jid: memberNow.jid, admin: memberNow.admin }) : [...memberAdmin]) && memberAdmin, []))
+                    const metadata = m.isGroup ? conn.chats[m.chat] || await conn.groupMetadata(m.chat).catch(_ => null) : {}
+                    const groupAdmins = m.isGroup && (metadata.participants.reduce((memberAdmin, memberNow) => (memberNow.admin ? memberAdmin.push({ jid: memberNow.id?.endsWith('@s.whatsapp.net') ? memberNow.id : (memberNow.jid?.endsWith('@s.whatsapp.net') ? memberNow.jid : memberNow.phoneNumber), admin: memberNow.admin }) : [...memberAdmin]) && memberAdmin, []))
                     const isAdmin = m.isGroup && !!groupAdmins.find((member) => member.jid === m.sender)
                     const isBotAdmin = m.isGroup && !!groupAdmins.find((member) => member.jid === jidNormalizedUser(conn.user.id))
 

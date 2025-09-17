@@ -99,34 +99,24 @@ async function startWA() {
 
     conn.ev.on('creds.update', saveCreds);
 
-    conn.ev.on('group-participants.update', async ({ id, participants, action }) => {
-        if (!id) return
-        if (id === 'status@broadcast') return
-        if (!(id in conn.chats)) conn.chats[id] = { id }
-        let chats = conn.chats[id]
-        chats.isChats = true
-        const groupMetadata = await conn.groupMetadata(id).catch(_ => null)
-        if (!groupMetadata) return
-        chats.subject = groupMetadata.subject
-        chats.metadata = groupMetadata
+    conn.ev.on('group-participants.update', async ({ id }) => {
+        if (!id || id === 'status@broadcast') return;
+        try {
+            conn.chats[id] = await conn.groupMetadata(id);
+        } catch (e) {
+            console.error(`Gagal ambil data group ${id}:`, e);
+        }
     });
 
-    conn.ev.on('groups.update', async (groupsUpdates) => {
-        try {
-            for (const update of groupsUpdates) {
-                const id = update.id
-                if (!id || id === 'status@broadcast') continue
-                const isGroup = id.endsWith('@g.us')
-                if (!isGroup) continue
-                let chats = conn.chats[id]
-                if (!chats) chats = conn.chats[id] = { id }
-                chats.isChats = true
-                const metadata = await conn.groupMetadata(id).catch(_ => null)
-                if (metadata) chats.metadata = metadata
-                if (update.subject || metadata?.subject) chats.subject = update.subject || metadata.subject
+    conn.ev.on('groups.update', async (updates) => {
+        for (const update of updates) {
+            const id = update.id;
+            if (!id || id === 'status@broadcast' || !id.endsWith('@g.us')) continue;
+            try {
+                conn.chats[id] = await conn.groupMetadata(id);
+            } catch (err) {
+                console.error(`Gagal ambil data group ${id}:`, err);
             }
-        } catch (e) {
-            console.error(e)
         }
     });
 
