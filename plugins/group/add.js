@@ -1,4 +1,3 @@
-//import Func from '#lib/function.js';
 export default {
     name: "add",
     category: "group",
@@ -13,10 +12,9 @@ export default {
         if (!user) return m.reply('Reply/Tulis nomor yang ingin diadd');
         const response = await conn.groupParticipantsUpdate(m.chat, [user], 'add');
         const pp = await conn.profilePictureUrl(m.chat, 'image').catch(() => null);
-        const jpegThumbnail = pp ? Func.getBuffer(pp) : Buffer.alloc(0);
+        const jpegThumbnail = pp ? await Func.getBuffer(pp) : Buffer.alloc(0);
 
         for (const participant of response) {
-        console.log(participant.content)
             const jid = participant.content.attrs.phone_number || participant.content.attrs.jid;
             const status = participant.status;
 

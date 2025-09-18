@@ -6,7 +6,7 @@ export default {
         if (!m.text) return m.reply('Masukkan teks yang valid!')
 
         try {
-            let res = await Api.request('brat', '/api/bratvid', { text: encodeURIComponent(m.text.trim()) })
+            let res = await Api.request('brat', '/api/bratvid', { text: m.text.trim() })
             conn.sendSticker(m.chat, res.URL, m)
         } catch (err) {
             console.error('Error:', err)

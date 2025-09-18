@@ -31,7 +31,7 @@
     "baileys-md"
   ],
   "dependencies": {
-    "baileys": "^6.7.19",
+    "baileys": "latest",
     "chokidar": "^4.0.3",
     "file-type": "^17.1.1",
     "fluent-ffmpeg": "^2.1.3",

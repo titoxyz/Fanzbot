@@ -19,7 +19,7 @@ export default async function Command(conn, m) {
         // EVENT LISTENER
         if (typeof plugin.on === "function") {
             try {
-                const handled = await plugin.on.call(conn, m, conn, {
+                const handled = await plugin.on.call(conn, m, {
                     Api,
                     Func,
                     quoted,
