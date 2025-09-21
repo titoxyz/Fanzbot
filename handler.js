@@ -14,18 +14,27 @@ export default async function Command(conn, m) {
 
   if (m.isBot) return;
   if (!mode && !isOwner) return;
+  const metadata = m.isGroup ? conn.chats[m.chat] || await conn.groupMetadata(m.chat).catch(_ => null) : {}
+  const groupAdmins = m.isGroup && (metadata.participants.reduce((memberAdmin, memberNow) => (memberNow.admin ? memberAdmin.push({ jid: memberNow.id?.endsWith('@s.whatsapp.net') ? memberNow.id : (memberNow.jid?.endsWith('@s.whatsapp.net') ? memberNow.jid : memberNow.phoneNumber), admin: memberNow.admin }) : [...memberAdmin]) && memberAdmin, []))
+  const isAdmin = m.isGroup && !!groupAdmins.find((member) => member.jid === m.sender)
+  const isBotAdmin = m.isGroup && !!groupAdmins.find((member) => member.jid === jidNormalizedUser(conn.user.id))
+
+  const anunya = {
+        Api,
+        Func,
+        downloadM,
+        quoted,
+        metadata,
+        isOwner,
+        isAdmin,
+        isBotAdmin
+    }
   // === LOOPING PLUGINS ===
     for (const plugin of Object.values(conn.plugins)) {
         // EVENT LISTENER
         if (typeof plugin.on === "function") {
             try {
-                const handled = await plugin.on.call(conn, m, {
-                    Api,
-                    Func,
-                    quoted,
-                    downloadM,
-                    isOwner
-                });
+                const handled = await plugin.on.call(conn, m, anunya);
                 if (handled) continue;
             } catch (e) {
                 console.error(`[PLUGIN EVENT ERROR] ${plugin.name}`, e);
@@ -39,11 +48,7 @@ export default async function Command(conn, m) {
 
             try {
                 if (isCmd) {
-                    const metadata = m.isGroup ? conn.chats[m.chat] || await conn.groupMetadata(m.chat).catch(_ => null) : {}
-                    const groupAdmins = m.isGroup && (metadata.participants.reduce((memberAdmin, memberNow) => (memberNow.admin ? memberAdmin.push({ jid: memberNow.id?.endsWith('@s.whatsapp.net') ? memberNow.id : (memberNow.jid?.endsWith('@s.whatsapp.net') ? memberNow.jid : memberNow.phoneNumber), admin: memberNow.admin }) : [...memberAdmin]) && memberAdmin, []))
-                    const isAdmin = m.isGroup && !!groupAdmins.find((member) => member.jid === m.sender)
-                    const isBotAdmin = m.isGroup && !!groupAdmins.find((member) => member.jid === jidNormalizedUser(conn.user.id))
-
+                    
                     if (plugin.settings?.owner && !isOwner) {
                         m.reply(mess.owner);
                         continue;
@@ -65,14 +70,7 @@ export default async function Command(conn, m) {
                         continue;
                     }
 
-                    plugin.run(conn, m, {
-                        Api,
-                        Func,
-                        downloadM,
-                        quoted,
-                        metadata,
-                        isOwner
-                    });
+                    plugin.run(conn, m, anunya);
                 }
             } catch (e) {
                 console.error(`[PLUGIN ERROR] ${plugin.name}`, e);

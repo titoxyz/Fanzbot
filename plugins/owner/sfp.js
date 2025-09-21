@@ -9,9 +9,9 @@ export default {
     },
     run: async (conn, m, { quoted }) => {
         if (!m.text) return m.reply(`Nama filenya??\nContoh: ${m.cmd} folder/namafile`);
-        if (!quoted.text) return m.reply(`balas pesan nya!`)
+        if (!quoted.body) return m.reply(`balas pesan nya!`)
         let path = './plugins/' + m.text + '.js'
-        await fs.writeFileSync(path, m.quoted.text)
+        fs.writeFileSync(path, quoted.body)
         m.reply(`tersimpan di ${path}`)
     }
 }

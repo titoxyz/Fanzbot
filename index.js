@@ -127,7 +127,7 @@ async function startWA() {
 
         if (m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return;
         if (m.message && !m.isBot) {
-            console.log(color.cyan(' - FROM'), color.cyan(conn.chats[m.chat]?.subject), color.blueBright(m.chat));
+            console.log(color.cyan(' - FROM'), color.cyan(m.isGroup ? conn.chats[m.chat]?.subject : m.pushname), color.blueBright(m.chat));
             console.log(color.yellowBright(' - CHAT'), color.yellowBright(m.isGroup ? `Grup (${m.sender} : ${m.pushname})` : 'Pribadi'));
             console.log(color.greenBright(' - PESAN'), color.greenBright(m.body || m.type));
             console.log(color.magentaBright('-'.repeat(40)))

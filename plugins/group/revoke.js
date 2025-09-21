@@ -4,6 +4,7 @@ export default {
     command: ["revoke", "resetlink"],
     settings: {
         group: true,
+        admin: true,
         botAdmin: true
     },
     run: async (conn, m) => {
