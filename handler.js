@@ -69,6 +69,10 @@ export default async function Command(conn, m) {
                         m.reply(mess.botAdmin);
                         continue;
                     }
+                    if (plugin.settings?.loading && !isBotAdmin) {
+                        m.reply(mess.loading);
+                        continue;
+                    }
 
                     plugin.run(conn, m, anunya);
                 }
