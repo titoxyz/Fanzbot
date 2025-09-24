@@ -1,6 +1,6 @@
 export default {
     name: "sticker",
-    category: "tools",
+    category: "sticker",
     command: ["s", "sticker", "stc"],
     run: async (conn, m, { quoted }) => {
         if (/image|video|webp/.test(quoted.msg?.mimetype)) {

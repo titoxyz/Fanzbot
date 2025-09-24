@@ -30,7 +30,7 @@ export default async function Command(conn, m) {
         isBotAdmin
     }
   // === LOOPING PLUGINS ===
-    for (const plugin of Object.values(conn.plugins)) {
+    for (const plugin of Object.values(plugins)) {
         // EVENT LISTENER
         if (typeof plugin.on === "function") {
             try {

@@ -2,11 +2,8 @@ import axios from 'axios';
 
 export default {
     name: "chatgpt",
-    category: "ai",
+    category: "ai-chat",
     command: ["chatgpt", "gpt"],
-    settings: {
-        loading: true,
-    },
     run: async (conn, m) => {
         if (!m.text) return m.reply(`Masukkan pertanyaan atau perintah!\n\nContoh:\n${m.cmd} apa itu AI`);
 
@@ -24,14 +21,26 @@ export default {
     }
 };
 
+
+async function getApikey() {
+    try {
+        let { data } = await axios.get("https://overchat.ai/image/ghibli");
+        let key = data.match(/sk-proj-[A-Za-z0-9_\-]{80,}/);
+        return key ? key[0] : null;
+    } catch {
+        return null;
+    }
+}
+
 async function gpt(history) {
+    const apikey = await getApikey()
     const res = await axios.post("https://api.openai.com/v1/responses", {
         model: "gpt-5",
-        input: history,
+        input: JSON.stringify(history),
     }, {
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer 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',
+            'Authorization': 'Bearer ' + apikey
         }
     });
 

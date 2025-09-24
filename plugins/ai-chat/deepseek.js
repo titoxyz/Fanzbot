@@ -2,11 +2,8 @@ import axios from 'axios';
 
 export default {
     name: "deepseek",
-    category: "ai",
+    category: "ai-chat",
     command: ["deepseek", "dipsek"],
-    settings: {
-        loading: true,
-    },
     run: async (conn, m) => {
         if (!m.text) return m.reply(`Masukkan pertanyaan atau perintah!\n\nContoh:\n${m.cmd} apa itu AI`);
 

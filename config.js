@@ -15,7 +15,7 @@ global.mess = {
     group: 'Fitur Ini Khusus Group',
     admin: 'Fitur Ini Khusus Admin Group',
     botAdmin: 'Bot Harus Menjadi Admin Group',
-    private: 'Fitur Ini Khusus Private',
+    private: 'Fitur Ini Khusus Private'
 }
 
 global.stickpack = 'Croted By'

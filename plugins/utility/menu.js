@@ -4,14 +4,13 @@ export default {
   command: ["menu"],
   run: async (conn, m) => {
     let grouped = {}
-    for (let plugin of Object.values(conn.plugins)) {
+    for (let plugin of Object.values(plugins)) {
       if (!grouped[plugin.category]) grouped[plugin.category] = []
       grouped[plugin.category].push(plugin)
     }
 
     let menu = "List Fitur ESEMPE-MD\n" + 
       Object.entries(grouped).map(([category, items]) => {
-        console.log(items)
         return `┌─「 ${category.toUpperCase()} 」\n` +
         items.map(p => `│❒ ${m.prefix}${p.name}`).join("\n") +
         "\n└────"

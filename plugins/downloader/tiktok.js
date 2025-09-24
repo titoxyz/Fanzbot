@@ -23,7 +23,7 @@ export default {
         throw "URL TikTok tidak valid. Pastikan URL sesuai format yang benar.";
       }
 
-      const data = Api.request("purr", "/api/v1/tiktok", { url: parseUrl });
+      const data = await Api.request("purr", "/api/v1/tiktok", { url: parseUrl });
       
       if (!data || !data.media) {
         throw "Tidak dapat mengunduh konten TikTok. Pastikan URL valid.";

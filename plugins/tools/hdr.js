@@ -4,7 +4,7 @@ import FormData from 'form-data';
 
 export default {
     name: "hd",
-    category: "ai",
+    category: "tools",
     command: ["hdr", "hd"],
     settings: {
         loading: true,

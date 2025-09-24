@@ -11,10 +11,12 @@ import fs from 'fs';
 import pino from 'pino';
 
 import color from './lib/color.js';
-import PluginsLoad from './lib/loadPlugins.js';
 import serialize, { Client } from './lib/serialize.js';
-
+import PluginsLoad from './lib/loadPlugins.js';
 const loader = new PluginsLoad('./plugins');
+
+loader.load();
+global.plugins = loader.plugins;
 
 async function startWA() {
     const { state, saveCreds } = await useMultiFileAuthState('sessions');
@@ -31,9 +33,6 @@ async function startWA() {
     });
 
     await Client(conn)
-
-    await loader.load();
-    conn.plugins = loader.plugins;
 
     if (!conn.chats) conn.chats = {}
 
