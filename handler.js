@@ -69,7 +69,7 @@ export default async function Command(conn, m) {
                         m.reply(mess.botAdmin);
                         continue;
                     }
-                    if (plugin.settings?.loading && !isBotAdmin) {
+                    if (plugin.settings?.loading) {
                         m.reply(mess.wait);
                         continue;
                     }
