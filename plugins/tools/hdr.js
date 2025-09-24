@@ -9,7 +9,7 @@ export default {
     settings: {
         loading: true,
     },
-    run: async (conn, m) => {
+    run: async (conn, m, { quoted }) => {
         if (!/image/.test(quoted.msg.mimetype)) return m.reply(`Kirim/Reply Foto Dengan Caption ${m.cmd}`);
         let media = await quoted.download();
         let res = await hdr(media, 2)

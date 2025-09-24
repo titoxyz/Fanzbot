@@ -70,7 +70,7 @@ export default async function Command(conn, m) {
                         continue;
                     }
                     if (plugin.settings?.loading && !isBotAdmin) {
-                        m.reply(mess.loading);
+                        m.reply(mess.wait);
                         continue;
                     }
 
