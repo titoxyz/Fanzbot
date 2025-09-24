@@ -69,10 +69,7 @@ export default async function Command(conn, m) {
                         m.reply(mess.botAdmin);
                         continue;
                     }
-                    if (plugin.settings?.loading) {
-                        m.reply(mess.wait);
-                        continue;
-                    }
+                    if (plugin.settings?.loading) m.reply(mess.wait);
 
                     plugin.run(conn, m, anunya);
                 }
