@@ -1,30 +1,43 @@
 import { watchFile, unwatchFile } from 'fs'
 import { fileURLToPath } from 'url'
-import color from './lib/color.js';
+import log from "#lib/logger.js"
 
+// Nomor pairing (untuk scan QR/Pairing code)
+global.PAIRING_NUMBER = 62882003353414
 
-global.PAIRING_NUMBER = 6285760188757
-global.ownerNumber = ['6287701656619', '6287782304364']
+// Nomor owner utama + cadangan
+global.ownerNumber = [
+  '62882005514880',
+  '6287782304364'
+]
 
-global.mode = false //self
+// Mode bot: 
+// true  = self mode (hanya owner)
+// false = public
+global.mode = false
 
-// bantu isi, males gw jier
+// Pesan default untuk respon bot
 global.mess = {
-    wait: 'Harap Tunggu sebentar',
-    owner: 'Fitur Ini Khusus Owner',
-    group: 'Fitur Ini Khusus Group',
-    admin: 'Fitur Ini Khusus Admin Group',
-    botAdmin: 'Bot Harus Menjadi Admin Group',
-    private: 'Fitur Ini Khusus Private'
+  wait: 'Harap tunggu sebentar...',
+  owner: 'Fitur ini hanya bisa digunakan oleh Owner.',
+  group: 'Fitur ini hanya bisa digunakan dalam Group.',
+  admin: 'Fitur ini hanya bisa digunakan oleh Admin Group.',
+  botAdmin: 'Bot harus menjadi Admin terlebih dahulu.',
+  private: 'Fitur ini hanya bisa digunakan di chat pribadi.'
 }
 
-global.stickpack = 'Croted By'
+// Default watermark untuk stiker
+global.stickpack = 'Created By'
 global.stickauth = 'ESEMPE-MD'
 
+global.title = "Angos bot ygy"
+global.body = "Lightweight WhatsApp Multi-Device bot built with Baileys."
+global.thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaK3_60MiEWpItg8BbrvcF4Be_vgIDd8Ggj13AYkPqGdUosLSmCMCtGSY&s=10"
 
-let file = fileURLToPath(import.meta.url)
+// Hot reload config.js ketika ada perubahan
+const file = fileURLToPath(import.meta.url)
 watchFile(file, () => {
   unwatchFile(file)
-  console.log(color.redBright("Update 'config.js'"))
+  log.info("berhasil relooad file config.")
   import(`${file}?update=${Date.now()}`)
 })

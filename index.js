@@ -1,141 +1,139 @@
 import('./config.js')
 
 import makeWASocket, {
-    Browsers,
-    DisconnectReason,
-    useMultiFileAuthState,
-    makeCacheableSignalKeyStore
-} from 'baileys';
-import { Boom } from '@hapi/boom';
-import fs from 'fs';
-import pino from 'pino';
+  Browsers,
+  DisconnectReason,
+  useMultiFileAuthState,
+  makeCacheableSignalKeyStore
+} from '@whiskeysockets/baileys'
+import { Boom } from '@hapi/boom'
+import fs from 'fs'
+import pino from 'pino'
 
-import color from './lib/color.js';
-import serialize, { Client } from './lib/serialize.js';
-import PluginsLoad from './lib/loadPlugins.js';
-const loader = new PluginsLoad('./plugins');
+import serialize, { Client } from '#lib/serialize.js'
+import log from '#lib/logger.js'
+import printMessage from "#lib/printChatLog.js"
+import PluginsLoad from '#lib/loadPlugins.js'
 
-loader.load();
-global.plugins = loader.plugins;
+const loader = new PluginsLoad('./plugins', { debug: true })
+await loader.load()
+global.plugins = loader.plugins
 
 async function startWA() {
-    const { state, saveCreds } = await useMultiFileAuthState('sessions');
+  const { state, saveCreds } = await useMultiFileAuthState('sessions')
 
-    const conn = makeWASocket({
-        auth: {
-            creds: state.creds,
-            keys: makeCacheableSignalKeyStore(state.keys, pino().child({ level: 'silent', stream: 'store' }))
-        },
-        logger: pino({ level: 'silent' }),
-        browser: Browsers.ubuntu('Chrome'),
-        markOnlineOnConnect: false,
-        generateHighQualityLinkPreview: true,
-    });
+  const sock = makeWASocket({
+    auth: {
+      creds: state.creds,
+      keys: makeCacheableSignalKeyStore(
+        state.keys,
+        pino().child({ level: 'fatal', stream: 'store' })
+      )
+    },
+    logger: pino({ level: 'silent' }),
+    browser: Browsers.ubuntu('Edge'),
+    markOnlineOnConnect: false,
+    generateHighQualityLinkPreview: true
+  })
 
-    await Client(conn)
+  await Client(sock)
 
-    if (!conn.chats) conn.chats = {}
+  if (!sock.chats) sock.chats = {}
 
-    if (!conn.authState.creds.registered) {
-        setTimeout(async () => {
-            try {
-                const code = await conn.requestPairingCode(PAIRING_NUMBER, 'ESEMPEMD');
-                console.log(color.green(`Kode Pairing: ${code}`))
-            } catch (err) {
-                console.log(color.red('[+] Gagal mengambil pairing code:'), err)
-            }
-        }, 3000);
+  if (!sock.authState.creds.registered) {
+    setTimeout(async () => {
+      try {
+        const code = await sock.requestPairingCode(PAIRING_NUMBER, 'ESEMPEMD')
+        log.info(`Pairing Code: ${code}`)
+      } catch (err) {
+        log.error(`Gagal ambil pairing code: ${err}`)
+      }
+    }, 3000)
+  }
+
+  sock.ev.on('connection.update', async ({ connection, lastDisconnect }) => {
+    if (connection) log.info(`Connection Status: ${connection}`)
+
+    if (connection === 'close') {
+      const statusCode = new Boom(lastDisconnect?.error)?.output?.statusCode
+      switch (statusCode) {
+        case 408:
+          log.error('Connection timed out. Restarting...')
+          await startWA()
+          break
+        case 503:
+          log.error('Service unavailable. Restarting...')
+          await startWA()
+          break
+        case 428:
+        case 515:
+          log.error('Connection closed. Restarting...')
+          await startWA()
+          break
+        case 401:
+          log.error('Session logged out. Recreate session...')
+          fs.rmSync('./sessions', { recursive: true, force: true })
+          await startWA()
+          break
+        case 403:
+          log.warn('WhatsApp account banned. Recreate session...')
+          fs.rmSync('./sessions', { recursive: true, force: true })
+          await startWA()
+          break
+        case 405:
+          log.warn('Session not logged in. Recreate session...')
+          fs.rmSync('./sessions', { recursive: true, force: true })
+          await startWA()
+          break
+        default:
+          log.fatal(`Unhandled connection issue. Code: ${statusCode}`)
+          return process.exit(1)
+      }
     }
 
-    conn.ev.on('connection.update', async ({ connection, lastDisconnect }) => {
-        if (connection) console.log(color.yellow(`[+] Connection Status : ${connection}`))
-        if (connection === 'close') {
-            const statusCode = new Boom(lastDisconnect?.error)?.output?.statusCode;
-            switch (statusCode) {
-                case 408:
-                    console.log(color.red('[+] Connection timed out. restarting...'))
-                    await startWA()
-                    break
-                case 503:
-                    console.log(color.red('[+] Unavailable service. restarting...'))
-                    await startWA()
-                    break
-                case 428:
-                    console.log(color.cyan('[+] Connection closed, restarting...'))
-                    await startWA()
-                    break
-                case 515:
-                    console.log(color.cyan('[+] Need to restart, restarting...'))
-                    await startWA()
-                    break
-                case 401:
-                    console.log(color.cyan('[+] Session Logged Out.. Recreate session...'))
-                    fs.rmSync('./sessions', { recursive: true, force: true })
-                    await startWA()
-                    break
-                case 403:
-                    console.log(color.red(`[+] Your WhatsApp Has Been Baned :D`))
-                    fs.rmSync('./sessions', { recursive: true, force: true })
-                    await startWA()
-                    break
+    if (connection === 'open') {
+      log.success('Bot connected successfully.')
+      sock.insertAllGroup()
+    }
+  })
 
-                case 405:
-                    console.log(color.cyan('[+] Session Not Logged In.. Recreate session...'))
-                    fs.rmSync('./sessions', { recursive: true, force: true })
-                    await startWA()
-                    break
-                default:
-                    console.log("Unhandled connection issue.", statusCode);
-                    return process.exit(1);
-            }
-        }
+  sock.ev.on('creds.update', saveCreds)
 
-        if (connection === 'open') {
-            console.log(color.green('[+] Bot Connected.'))
-            conn.insertAllGroup();
-        }
-    });
+  sock.ev.on('group-participants.update', async ({ id }) => {
+    if (!id || id === 'status@broadcast') return
+    try {
+      sock.chats[id] = await sock.groupMetadata(id)
+    } catch (e) {
+      log.error(`Gagal ambil data group ${id}: ${e}`)
+    }
+  })
 
-    conn.ev.on('creds.update', saveCreds);
+  sock.ev.on('groups.update', async (updates) => {
+    for (const update of updates) {
+      const id = update.id
+      if (!id || id === 'status@broadcast' || !id.endsWith('@g.us')) continue
+      try {
+        sock.chats[id] = await sock.groupMetadata(id)
+      } catch (err) {
+        log.error(`Gagal ambil data group ${id}: ${err}`)
+      }
+    }
+  })
 
-    conn.ev.on('group-participants.update', async ({ id }) => {
-        if (!id || id === 'status@broadcast') return;
-        try {
-            conn.chats[id] = await conn.groupMetadata(id);
-        } catch (e) {
-            console.error(`Gagal ambil data group ${id}:`, e);
-        }
-    });
+  sock.ev.on('messages.upsert', async ({ messages }) => {
+    if (!messages[0]) return
 
-    conn.ev.on('groups.update', async (updates) => {
-        for (const update of updates) {
-            const id = update.id;
-            if (!id || id === 'status@broadcast' || !id.endsWith('@g.us')) continue;
-            try {
-                conn.chats[id] = await conn.groupMetadata(id);
-            } catch (err) {
-                console.error(`Gagal ambil data group ${id}:`, err);
-            }
-        }
-    });
+    const m = await serialize(sock, messages[0])
 
-    conn.ev.on('messages.upsert', async ({ messages }) => {
-        if (!messages[0]) return;
+    if (m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return
 
-        let m = await serialize(conn, messages[0]);
+    if (m.message && !m.isBot) {
+      printMessage(m, sock)
+    }
 
-        if (m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return;
-        if (m.message && !m.isBot) {
-            console.log(color.cyan(' - FROM'), color.cyan(m.isGroup ? conn.chats[m.chat]?.subject : m.pushname), color.blueBright(m.chat));
-            console.log(color.yellowBright(' - CHAT'), color.yellowBright(m.isGroup ? `Grup (${m.sender} : ${m.pushname})` : 'Pribadi'));
-            console.log(color.greenBright(' - PESAN'), color.greenBright(m.body || m.type));
-            console.log(color.magentaBright('-'.repeat(40)))
-        }
-
-        await (await import(`./handler.js?v=${Date.now()}`)).default(conn, m);
-    });
-
+    await (await import(`./handler.js?v=${Date.now()}`)).default(sock, m)
+  })
 }
 
-startWA();
-process.on('uncaughtException', console.error);
+startWA()
+process.on('uncaughtException', (err) => log.error(err))
