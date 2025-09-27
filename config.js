@@ -7,6 +7,7 @@ global.PAIRING_NUMBER = 62882003353414
 
 // Nomor owner utama + cadangan
 global.ownerNumber = [
+  '6287701656619',
   '62882005514880',
   '6287782304364'
 ]
@@ -14,7 +15,7 @@ global.ownerNumber = [
 // Mode bot: 
 // true  = self mode (hanya owner)
 // false = public
-global.mode = false
+global.pubelik = false
 
 // Pesan default untuk respon bot
 global.mess = {
@@ -30,8 +31,8 @@ global.mess = {
 global.stickpack = 'Created By'
 global.stickauth = 'ESEMPE-MD'
 
-global.title = "Angos bot ygy"
-global.body = "Lightweight WhatsApp Multi-Device bot built with Baileys."
+global.title = "ESEMPE-MD"
+global.body = "Apcb"
 global.thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaK3_60MiEWpItg8BbrvcF4Be_vgIDd8Ggj13AYkPqGdUosLSmCMCtGSY&s=10"
 
 // Hot reload config.js ketika ada perubahan

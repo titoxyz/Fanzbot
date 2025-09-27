@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { jidNormalizedUser } from '@whiskeysockets/baileys'
+import { jidNormalizedUser } from 'baileys'
 import util from 'util'
 import cp from 'child_process'
 
@@ -13,29 +13,11 @@ export default async function Command(conn, m) {
   const isOwner = m.fromMe || ownerNumber.includes(m.sender.split('@')[0])
 
   if (m.isBot) return
-  if (!mode && !isOwner) return
+  if (!pubelik && !isOwner) return
 
-  const metadata = m.isGroup
-    ? conn.chats[m.chat] || (await conn.groupMetadata(m.chat).catch(() => null))
-    : {}
-
-  const groupAdmins =
-    m.isGroup &&
-    metadata.participants.reduce((admins, member) => {
-      if (member.admin) {
-        const jid = member.id?.endsWith('@s.whatsapp.net')
-          ? member.id
-          : member.jid?.endsWith('@s.whatsapp.net')
-          ? member.jid
-          : member.phoneNumber
-        admins.push({ jid, admin: member.admin })
-      }
-      return admins
-    }, [])
-
-  const isAdmin = m.isGroup && !!groupAdmins.find((member) => member.jid === m.sender)
-  const isBotAdmin =
-    m.isGroup && !!groupAdmins.find((member) => member.jid === jidNormalizedUser(conn.user.id))
+  const metadata = m.isGroup ? conn.chats[m.chat] || (await conn.groupMetadata(m.chat).catch(() => null)) : {}
+  const isAdmin = m.isGroup && metadata.participants.find(u => conn.getJid(u.id) === m.sender).admin == 'admin' || false;
+  const isBotAdmin = m.isGroup && metadata.participants.find(u => conn.getJid(u.id) === jidNormalizedUser(conn.user.id)).admin == 'admin' || false;
 
   const ctx = {
     Api,

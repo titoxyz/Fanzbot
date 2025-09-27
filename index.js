@@ -5,7 +5,7 @@ import makeWASocket, {
   DisconnectReason,
   useMultiFileAuthState,
   makeCacheableSignalKeyStore
-} from '@whiskeysockets/baileys'
+} from 'baileys'
 import { Boom } from '@hapi/boom'
 import fs from 'fs'
 import pino from 'pino'
@@ -22,7 +22,7 @@ global.plugins = loader.plugins
 async function startWA() {
   const { state, saveCreds } = await useMultiFileAuthState('sessions')
 
-  const sock = makeWASocket({
+  const conn = makeWASocket({
     auth: {
       creds: state.creds,
       keys: makeCacheableSignalKeyStore(
@@ -36,14 +36,14 @@ async function startWA() {
     generateHighQualityLinkPreview: true
   })
 
-  await Client(sock)
+  await Client(conn)
 
-  if (!sock.chats) sock.chats = {}
+  if (!conn.chats) conn.chats = {}
 
-  if (!sock.authState.creds.registered) {
+  if (!conn.authState.creds.registered) {
     setTimeout(async () => {
       try {
-        const code = await sock.requestPairingCode(PAIRING_NUMBER, 'ESEMPEMD')
+        const code = await conn.requestPairingCode(PAIRING_NUMBER, 'ESEMPEMD')
         log.info(`Pairing Code: ${code}`)
       } catch (err) {
         log.error(`Gagal ambil pairing code: ${err}`)
@@ -51,7 +51,7 @@ async function startWA() {
     }, 3000)
   }
 
-  sock.ev.on('connection.update', async ({ connection, lastDisconnect }) => {
+  conn.ev.on('connection.update', async ({ connection, lastDisconnect }) => {
     if (connection) log.info(`Connection Status: ${connection}`)
 
     if (connection === 'close') {
@@ -93,45 +93,45 @@ async function startWA() {
 
     if (connection === 'open') {
       log.success('Bot connected successfully.')
-      sock.insertAllGroup()
+      await conn.insertAllGroup()
     }
   })
 
-  sock.ev.on('creds.update', saveCreds)
+  conn.ev.on('creds.update', saveCreds)
 
-  sock.ev.on('group-participants.update', async ({ id }) => {
+  conn.ev.on('group-participants.update', async ({ id }) => {
     if (!id || id === 'status@broadcast') return
     try {
-      sock.chats[id] = await sock.groupMetadata(id)
+      conn.chats[id] = await conn.groupMetadata(id)
     } catch (e) {
       log.error(`Gagal ambil data group ${id}: ${e}`)
     }
   })
 
-  sock.ev.on('groups.update', async (updates) => {
+  conn.ev.on('groups.update', async (updates) => {
     for (const update of updates) {
       const id = update.id
       if (!id || id === 'status@broadcast' || !id.endsWith('@g.us')) continue
       try {
-        sock.chats[id] = await sock.groupMetadata(id)
+        conn.chats[id] = await conn.groupMetadata(id)
       } catch (err) {
         log.error(`Gagal ambil data group ${id}: ${err}`)
       }
     }
   })
 
-  sock.ev.on('messages.upsert', async ({ messages }) => {
+  conn.ev.on('messages.upsert', async ({ messages }) => {
     if (!messages[0]) return
 
-    const m = await serialize(sock, messages[0])
+    const m = await serialize(conn, messages[0])
 
     if (m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return
 
     if (m.message && !m.isBot) {
-      printMessage(m, sock)
+      printMessage(m, conn)
     }
 
-    await (await import(`./handler.js?v=${Date.now()}`)).default(sock, m)
+    await (await import(`./handler.js?v=${Date.now()}`)).default(conn, m)
   })
 }
 
