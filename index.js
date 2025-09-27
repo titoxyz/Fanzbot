@@ -128,6 +128,7 @@ async function startWA() {
     if (m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return
 
     if (m.message && !m.isBot) {
+    if (m.type == 'protocolMessage') return
       printMessage(m, conn)
     }
 

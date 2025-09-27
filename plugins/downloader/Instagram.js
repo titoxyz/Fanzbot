@@ -1,4 +1,4 @@
-import axios from "axios";
+import igdl from '#scrape/Instagram.js';
 
 export default {
     name: "instagram",
@@ -42,10 +42,7 @@ export default {
                     });
                 }
             } else {
-                m.reply({ 
-                video: { url: result[0].url },
-                caption: 'Berhasil mengunduh video'
-                });
+                m.reply({ video: { url: result[0].url }, caption: 'Berhasil mengunduh video' });
             }
         } catch (err) {
             console.error("Instagram Error:", err.message);
@@ -53,14 +50,3 @@ export default {
         }
     },
 };
-
-async function igdl(url) {
-    let data = JSON.stringify({ url, type: "video" });
-
-    const res = await axios.post('https://vdraw.ai/api/v1/instagram/ins-info', data, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    return res.data?.data
-}

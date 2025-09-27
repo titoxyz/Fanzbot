@@ -13,9 +13,9 @@ global.ownerNumber = [
 ]
 
 // Mode bot: 
-// true  = self mode (hanya owner)
-// false = public
-global.pubelik = false
+// false  = self mode (hanya owner)
+// true = public (semua user)
+global.pubelik = true
 
 // Pesan default untuk respon bot
 global.mess = {
