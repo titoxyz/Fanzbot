@@ -1,16 +1,16 @@
 {
    "set": {
-      "numP": 962796121703,
+      "numP": 6285607290187,
       "ownerN": [
-         "962796171203"
+         "6285607290187"
       ],
       "status": false,
-      "botN": "Fanz-bot",
-      "botF": "fnz",
+      "botN": "Aphrodite",
+      "botF": "Apd",
       "version": "1.4.8",
       "thumb": "https://files.catbox.moe/kwga23.jpg",
-      "url": "https://github.com/Adzy-f",
-      "wm": "[#] Fanz WhatsApp Bot"
+      "url": "https://github.com/titoxyz",
+      "wm": "[#] Tito WhatsApp Bot"
    },
    "mess": {
       "wait": "+= Harap Tunggu sebentar",
@@ -21,8 +21,8 @@
       "private": "+= Fitur Ini Khusus Private"
    },
    "pck": {
-      "name": "Sticker by Fanz",
-      "author": "Auhtor nya Adi"
+      "name": "Sticker by Aphrodite",
+      "author": "Auhtor nya Tito"
    },
    "pairC": "FANZCODE",
    "ryhar": "y7r35v1jrzh4z9myfsj2ut"
