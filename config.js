@@ -3,12 +3,11 @@ import { fileURLToPath } from 'url'
 import log from "#lib/logger.js"
 
 // Nomor pairing (untuk scan QR/Pairing code)
-global.PAIRING_NUMBER = 62882003353414
+global.PAIRING_NUMBER = 6285760188757
 
 // Nomor owner utama + cadangan
 global.ownerNumber = [
   '6287701656619',
-  '62882005514880',
   '6287782304364'
 ]
 

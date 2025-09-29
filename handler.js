@@ -16,8 +16,8 @@ export default async function Command(conn, m) {
   if (!pubelik && !isOwner) return
 
   const metadata = m.isGroup ? conn.chats[m.chat] || (await conn.groupMetadata(m.chat).catch(() => null)) : {}
-  const isAdmin = m.isGroup && metadata.participants.find(u => conn.getJid(u.id) === m.sender).admin == 'admin' || false;
-  const isBotAdmin = m.isGroup && metadata.participants.find(u => conn.getJid(u.id) === jidNormalizedUser(conn.user.id)).admin == 'admin' || false;
+  const isAdmin = m.isGroup && metadata.participants.find(u => conn.getJid(u.id) === m.sender)?.admin == 'admin' || false;
+  const isBotAdmin = m.isGroup && metadata.participants.find(u => conn.getJid(u.id) === jidNormalizedUser(conn.user.id))?.admin == 'admin' || false;
 
   const ctx = {
     Api,

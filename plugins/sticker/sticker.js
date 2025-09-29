@@ -1,15 +1,20 @@
 export default {
     name: "sticker",
     category: "sticker",
-    command: ["s", "sticker", "stc"],
+    command: ["s", "sticker", "stc", "stick", "stiker", "swm", "stickerwm"],
     run: async (conn, m, { quoted }) => {
         if (/image|video|webp/.test(quoted.msg?.mimetype)) {
             const media = await quoted.download();
 
-            if (quoted.msg?.seconds > 10) {
-                return m.reply("*Oopsie!*\n\n> Videos longer than 10 seconds are too long to be made into stickers~\n> Try cutting the video first, so you can make stickers!");
+            if (quoted.msg?.seconds > 10) return m.reply("*Oopsie!*\n\n> Videos longer than 10 seconds are too long to be made into stickers~\n> Try cutting the video first, so you can make stickers!");
+            let exif;
+            if (m.text) {
+                let [packname, author] = m.text.split(/[,|\-+&]/);
+                exif = { packname: packname ? packname : '', packpublish: author ? author : '' };
+            } else {
+                exif = { packname: global.stickpack, packpublish: global.stickauth };
             }
-            conn.sendSticker(m.chat, media, m)
+            conn.sendSticker(m.chat, media, m, exif)
 
         } else if (m.mentions && m.mentions.length !== 0) {
             for (let id of m.mentions) {
