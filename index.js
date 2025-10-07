@@ -86,7 +86,7 @@ async function startWA() {
           await startWA()
           break
         default:
-          log.fatal(`Unhandled connection issue. Code: ${statusCode}`)
+          log.error(`Unhandled connection issue. Code: ${statusCode}`)
           return process.exit(1)
       }
     }
