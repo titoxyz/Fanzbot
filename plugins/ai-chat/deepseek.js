@@ -15,7 +15,7 @@ export default {
         try {
             const res = await deepseek(conn.deepseek[m.sender]);
             conn.deepseek[m.sender].push({ role: 'assistant', content: res });
-            m.reply(result)
+            m.reply(res)
         } catch (err) {
             m.reply('Terjadi Kesalahan')
             console.error(err);
