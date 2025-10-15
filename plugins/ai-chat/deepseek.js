@@ -10,18 +10,14 @@ export default {
 
         if (!conn.deepseek) conn.deepseek = {};
         if (!conn.deepseek[m.sender]) conn.deepseek[m.sender] = [];
-        conn.deepseek[m.sender].push({ content: input, is_user: true });
+        conn.deepseek[m.sender].push({ role: 'user', content: input });
 
         try {
-            const res = await deepseek(input, conn.deepseek[m.sender]);
-            const result = res.replace(/<think>[\s\S]*?<\/think>/gi, '')
-                .replace(/&quot;/g, '"')
-                .replace(/<br\s*\/?>/gi, '\n')
-                .replace(/&#039;/g, "'")
-                .trim();
-            conn.deepseek[m.sender].push({ content: res, is_user: false });
+            const res = await deepseek(conn.deepseek[m.sender]);
+            conn.deepseek[m.sender].push({ role: 'assistant', content: res });
             m.reply(result)
         } catch (err) {
+            m.reply('Terjadi Kesalahan')
             console.error(err);
         }
     }
