@@ -1,4 +1,4 @@
-import deepseek from '#scrape/deepinfra.js';
+import deepinfra from '#scrape/deepinfra.js';
 
 export default {
     name: "deepseek",
@@ -8,12 +8,12 @@ export default {
         const input = m.isQuoted ? m.quoted.text : m.text;
         if (!input) return m.reply(`Masukkan pertanyaan atau perintah!\n\nContoh:\n${m.cmd} apa itu AI`);
 
-        if (!conn.deepseek) conn.deepseek = {};
+        conn.deepseek ??= {};
         if (!conn.deepseek[m.sender]) conn.deepseek[m.sender] = [];
         conn.deepseek[m.sender].push({ role: 'user', content: input });
 
         try {
-            const res = await deepseek('deepseek-ai/DeepSeek-V3', conn.deepseek[m.sender]);
+            const res = await deepinfra('deepseek-ai/DeepSeek-V3.1', conn.deepseek[m.sender]);
             conn.deepseek[m.sender].push({ role: 'assistant', content: res });
             m.reply(res)
         } catch (err) {

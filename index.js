@@ -13,7 +13,6 @@ import pino from 'pino'
 
 import serialize, { Client } from '#lib/serialize.js'
 import log from '#lib/logger.js'
-import printMessage from "#lib/printChatLog.js"
 import PluginsLoad from '#lib/loadPlugins.js'
 
 const loader = new PluginsLoad('./plugins', { debug: true })
@@ -40,7 +39,7 @@ async function startWA() {
 
   await Client(conn)
 
-  if (!conn.chats) conn.chats = {}
+  conn.chats ??= {}
 
   if (!conn.authState.creds.registered) {
     setTimeout(async () => {
@@ -89,13 +88,14 @@ async function startWA() {
           break
         default:
           log.error(`Unhandled connection issue. Code: ${statusCode}`)
-          return process.exit(1)
+          await startWA()
+          //return process.exit(1)
       }
     }
 
     if (connection === 'open') {
       log.success('Bot connected successfully.')
-      await conn.insertAllGroup()
+      conn.chats = await conn.groupFetchAllParticipating();
     }
   })
 
@@ -139,14 +139,15 @@ async function startWA() {
 
   conn.ev.on('messages.upsert', async ({ messages }) => {
     if (!messages[0]) return
-
+    conn.messages ??= new Map()
     const m = await serialize(conn, messages[0])
+    if (!conn.messages.has(m.chat)) conn.messages.set(m.chat, [])
+    conn.messages.get(m.chat).push(m)
 
     if (m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return
-
     if (m.message && !m.isBot) {
     if (m.type == 'protocolMessage') return
-      printMessage(m, conn)
+      await (await import(`./lib/print.js?v=${Date.now()}`)).default(conn, m)
     }
 
     await (await import(`./handler.js?v=${Date.now()}`)).default(conn, m)

@@ -1,20 +1,20 @@
 import deepinfra from '#scrape/deepinfra.js';
 
 export default {
-    name: "chatgpt",
+    name: "llama",
     category: "ai-chat",
-    command: ["chatgpt", "gpt"],
+    command: ["llama", "meta", "metaai"],
     run: async (conn, m) => {
         const input = m.isQuoted ? m.quoted.text : m.text;
         if (!input) return m.reply(`Masukkan pertanyaan atau perintah!\n\nContoh:\n${m.cmd} apa itu AI`);
 
-        conn.chatgpt ??= {};
-        if (!conn.chatgpt[m.sender]) conn.chatgpt[m.sender] = [];
-        conn.chatgpt[m.sender].push({ role: 'user', content: input });
+        conn.llama ??= {};
+        if (!conn.llama[m.sender]) conn.llama[m.sender] = [];
+        conn.llama[m.sender].push({ role: 'user', content: input });
 
         try {
-            const res = await deepinfra('openai/gpt-oss-120b', conn.chatgpt[m.sender]);
-            conn.chatgpt[m.sender].push({ role: 'assistant', content: res });
+            const res = await deepinfra('meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8', conn.llama[m.sender]);
+            conn.llama[m.sender].push({ role: 'assistant', content: res });
             m.reply(res)
         } catch (err) {
             m.reply('Terjadi Kesalahan')
