@@ -157,7 +157,7 @@ async function startWA() {
                 await delay(10000)
                 await conn.sendMessage('status@broadcast', {
                     react: {
-                        text: emoji[Math.floor(Math.random() * emoji.length)],
+                        text: emoji,
                         key: m.key
                     }
                 }, {
