@@ -7,8 +7,8 @@ global.PAIRING_NUMBER = 6285760188757
 
 // Nomor owner utama + cadangan
 global.ownerNumber = [
-  '6287701656619',
-  '6287782304364'
+    '6287701656619',
+    '6287782304364'
 ]
 
 // Mode bot: 
@@ -16,14 +16,20 @@ global.ownerNumber = [
 // true = public (semua user)
 global.pubelik = true
 
+global.readsw = {
+    active: true,
+    react: false,
+    emoji: ['🔥', '💀', '☠️', '🥀', '🥶']
+}
+
 // Pesan default untuk respon bot
 global.mess = {
-  wait: 'Harap tunggu sebentar...',
-  owner: 'Fitur ini hanya bisa digunakan oleh Owner.',
-  group: 'Fitur ini hanya bisa digunakan dalam Group.',
-  admin: 'Fitur ini hanya bisa digunakan oleh Admin Group.',
-  botAdmin: 'Bot harus menjadi Admin terlebih dahulu.',
-  private: 'Fitur ini hanya bisa digunakan di chat pribadi.'
+    wait: 'Harap tunggu sebentar...',
+    owner: 'Fitur ini hanya bisa digunakan oleh Owner.',
+    group: 'Fitur ini hanya bisa digunakan dalam Group.',
+    admin: 'Fitur ini hanya bisa digunakan oleh Admin Group.',
+    botAdmin: 'Bot harus menjadi Admin terlebih dahulu.',
+    private: 'Fitur ini hanya bisa digunakan di chat pribadi.'
 }
 
 // Default watermark untuk stiker
@@ -37,7 +43,7 @@ global.thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaK
 // Hot reload config.js ketika ada perubahan
 const file = fileURLToPath(import.meta.url)
 watchFile(file, () => {
-  unwatchFile(file)
-  log.info("berhasil relooad file config.")
-  import(`${file}?update=${Date.now()}`)
+    unwatchFile(file)
+    log.info("berhasil relooad file config.")
+    import(`${file}?update=${Date.now()}`)
 })
