@@ -10,37 +10,37 @@
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366.svg)](https://whatsapp.com/)
 [![Maintenance](https://img.shields.io/badge/maintained-yes-green.svg)](https://github.com/AgusXzz/ESEMPE-MD)
 
-Bot WhatsApp Multi-Device yang sederhana, ringan, dan mudah dikustomisasi dengan fokus pada stabilitas dan kemudahan penggunaan.
+A simple, lightweight, and easily customizable WhatsApp Multi-Device bot with a focus on stability and ease of use.
 
-[Fitur](#fitur) • [Instalasi](#instalasi) • [Dokumentasi](#dokumentasi-plugin) • [Kontribusi](#kontribusi)
+[Features](#features) • [Installation](#installation) • [Documentation](#plugin-documentation) • [Contributing](#contributing)
 
 </div>
 
 ---
 
-## Fitur
+## Features
 
-- **Multi-Device Support** - Kompatibel dengan WhatsApp Multi-Device
-- **Arsitektur Plugin** - Sistem plugin modular yang mudah dikembangkan
-- **Lightweight** - Dibangun dengan performa optimal
-- **Stabil** - Fokus pada stabilitas dan reliability
-- **Easy to Use** - Mudah diinstal dan dikonfigurasi
-
----
-
-## Persyaratan Sistem
-
-Sebelum memulai, pastikan sistem Anda memenuhi persyaratan berikut:
-
-- **Node.js** versi 20 atau lebih tinggi
-- **npm** atau **yarn** package manager
-- **Koneksi internet** yang stabil untuk autentikasi
+- **Multi-Device Support** - Compatible with WhatsApp Multi-Device
+- **Plugin Architecture** - Modular plugin system for easy development
+- **Lightweight** - Built with optimal performance
+- **Stable** - Focus on stability and reliability
+- **Easy to Use** - Simple installation and configuration
 
 ---
 
-## Instalasi
+## System Requirements
 
-Ikuti langkah-langkah berikut untuk menginstal dan menjalankan bot:
+Before getting started, ensure your system meets the following requirements:
+
+- **Node.js** version 20 or higher
+- **npm** or **yarn** package manager
+- Stable **internet connection** for authentication
+
+---
+
+## Installation
+
+Follow these steps to install and run the bot:
 
 ### 1. Clone Repository
 
@@ -55,88 +55,88 @@ cd ESEMPE-MD
 npm install
 ```
 
-atau menggunakan yarn:
+or using yarn:
 
 ```bash
 yarn install
 ```
 
-### 3. Jalankan Bot
+### 3. Run the Bot
 
 ```bash
 npm start
 ```
 
-### 4. Autentikasi
+### 4. Authentication
 
-Pada saat pertama kali dijalankan, pairing code akan muncul di terminal. Masukkan kode tersebut di aplikasi WhatsApp Anda untuk menyelesaikan proses autentikasi.
+On first run, a pairing code will appear in the terminal. Enter this code in your WhatsApp application to complete the authentication process.
 
 ---
 
-## Dokumentasi Plugin
+## Plugin Documentation
 
-### Struktur Plugin
+### Plugin Structure
 
-Setiap plugin harus mengikuti struktur standar berikut:
+Each plugin must follow this standard structure:
 
 ```javascript
 /** @type {import('#lib/types.js').Plugin} */
 export default {
-  name: "name",                           // Nama plugin (wajib)
-  category: "category",                   // Kategori plugin (wajib)
-  command: ["command1", "command2"],      // Daftar command (wajib)
-  alias: ["cmd1", "cmd2"],                // Alias command (opsional)
+  name: "name",                           // Plugin name (required)
+  category: "category",                   // Plugin category (required)
+  command: ["command1", "command2"],      // Command list (required)
+  alias: ["cmd1", "cmd2"],                // Command aliases (optional)
   
-  // Konfigurasi plugin (opsional)
+  // Plugin configuration (optional)
   settings: {
-    owner: true,      // Fitur khusus owner
-    private: false,   // Fitur khusus private chat
-    group: true,      // Fitur khusus group
-    admin: false,     // Fitur khusus admin group
-    botAdmin: true,   // Bot harus menjadi admin
-    loading: false    // Kirim pesan loading
+    owner: true,      // Owner-only feature
+    private: false,   // Private chat only
+    group: true,      // Group chat only
+    admin: false,     // Group admin only
+    botAdmin: true,   // Bot must be admin
+    loading: false    // Send loading message
   },
 
-  // Fungsi utama yang dipanggil saat command dieksekusi (wajib)
+  // Main function called when command is executed (required)
   run: async (conn, m, context) => {
     const { Api, Func, downloadM, quoted, metadata, isOwner, isAdmin, isBotAdmin } = context;
-    // Implementasi kode di sini
+    // Implementation code here
   },
 
-  // Fungsi yang dipanggil setiap pesan masuk (opsional)
+  // Function called on every incoming message (optional)
   on: async (conn, m, context) => {
-    // Implementasi kode di sini
+    // Implementation code here
   }
 };
 ```
 
-### Parameter Context
+### Context Parameters
 
-| Parameter | Deskripsi |
-|-----------|-----------|
-| `Api` | Wrapper untuk fungsi terkait API (lihat `lib/api.js`) |
-| `Func` | Kumpulan fungsi utility (lihat `lib/function.js`) |
-| `downloadM` | Fungsi untuk download media dari pesan |
-| `quoted` | Object pesan yang direply |
-| `metadata` | Metadata group chat |
-| `isOwner` | Boolean apakah sender adalah owner |
-| `isAdmin` | Boolean apakah sender adalah admin group |
-| `isBotAdmin` | Boolean apakah bot adalah admin group |
+| Parameter | Description |
+|-----------|-------------|
+| `Api` | Wrapper for API-related functions (see `lib/api.js`) |
+| `Func` | Collection of utility functions (see `lib/function.js`) |
+| `downloadM` | Function to download media from messages |
+| `quoted` | Replied message object |
+| `metadata` | Group chat metadata |
+| `isOwner` | Boolean indicating if sender is owner |
+| `isAdmin` | Boolean indicating if sender is group admin |
+| `isBotAdmin` | Boolean indicating if bot is group admin |
 
 ### Autocomplete (JSDoc)
 
-Untuk mendapatkan autocomplete dan type checking, tambahkan JSDoc di atas `export default`:
+For autocomplete and type checking, add JSDoc above `export default`:
 
 ```javascript
 /** @type {import('#lib/types.js').Plugin} */
 export default {
-  // ... kode plugin
+  // ... plugin code
 };
 ```
 
 ---
 
-## Struktur Direktori
+## Directory Structure
 
 ```
 ESEMPE-MD/
@@ -160,27 +160,27 @@ ESEMPE-MD/
 
 ---
 
-## Kontribusi
+## Contributing
 
-Kontribusi dari komunitas sangat diterima. Untuk berkontribusi:
+Contributions from the community are greatly appreciated. To contribute:
 
-1. **Fork** repository ini
-2. **Buat branch** untuk fitur baru: `git checkout -b feat/nama-fitur`
-3. **Commit** perubahan Anda: `git commit -m 'Add: deskripsi fitur'`
-4. **Push** ke branch: `git push origin feat/nama-fitur`
-5. Buat **Pull Request**
+1. **Fork** this repository
+2. **Create a branch** for your feature: `git checkout -b feat/feature-name`
+3. **Commit** your changes: `git commit -m 'Add: feature description'`
+4. **Push** to the branch: `git push origin feat/feature-name`
+5. Create a **Pull Request**
 
-Untuk perubahan besar, harap buka issue terlebih dahulu untuk mendiskusikan perubahan yang ingin Anda lakukan.
-
----
-
-## Lisensi
-
-Proyek ini dilisensikan di bawah MIT License. Lihat file [LICENSE](LICENSE) untuk detail lebih lanjut.
+For major changes, please open an issue first to discuss the changes you would like to make.
 
 ---
 
-## Kontak
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+## Contact
 
 **Maintainer:** AgusXzz  
 **Repository:** [https://github.com/AgusXzz/ESEMPE-MD](https://github.com/AgusXzz/ESEMPE-MD)
@@ -189,7 +189,7 @@ Proyek ini dilisensikan di bawah MIT License. Lihat file [LICENSE](LICENSE) untu
 
 ## Acknowledgments
 
-Terima kasih kepada kontributor dan proyek-proyek berikut yang telah membantu pengembangan ESEMPE-MD:
+Special thanks to the following contributors and projects that have helped in the development of ESEMPE-MD:
 
 <table>
   <tr>
@@ -244,6 +244,6 @@ Terima kasih kepada kontributor dan proyek-proyek berikut yang telah membantu pe
 
 **Made with ❤️ by the ESEMPE-MD Team**
 
-⭐ Jangan lupa berikan star jika proyek ini membantu Anda!
+⭐ Don't forget to give a star if this project helps you!
 
 </div>
