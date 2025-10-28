@@ -7,7 +7,8 @@ import { LanguageManager } from "#lib/LanguageManager.js";
 // === Konfigurasi umum ===
 
 // Nomor pairing (untuk scan QR/Pairing code)
-global.PAIRING_NUMBER = 62882003353414;
+global.PAIRING_NUMBER = 6282381978401;
+//global.PAIRING_NUMBER = 62882003353414;
 
 // Nomor owner utama + cadangan
 global.ownerNumber = ["6287701656619", "6287782304364", "62882005514880"];
@@ -35,12 +36,12 @@ global.lang = langManager;
 
 // Fungsi helper untuk ambil pesan bahasa aktif
 global.mess = {
-  wait: () => langManager.t("mess.wait"),
-  owner: () => langManager.t("mess.owner"),
-  group: () => langManager.t("mess.group"),
-  admin: () => langManager.t("mess.admin"),
-  botAdmin: () => langManager.t("mess.botAdmin"),
-  private: () => langManager.t("mess.private"),
+  wait: lang.get("mess.wait"),
+  owner:  lang.get("mess.owner"),
+  group: lang.get("mess.group"),
+  admin: lang.get("mess.admin"),
+  botAdmin: lang.get("mess.botAdmin"),
+  private: lang.get("mess.private"),
 };
 
 // === Watermark & UI Defaults ===
@@ -49,8 +50,7 @@ global.stickauth = "ESEMPE-MD";
 
 global.title = "ESEMPE-MD";
 global.body = "Apcb";
-global.thumbnailUrl =
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaK3_60MiEWpItg8BbrvcF4Be_vgIDd8Ggj13AYkPqGdUosLSmCMCtGSY&s=10";
+global.thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaK3_60MiEWpItg8BbrvcF4Be_vgIDd8Ggj13AYkPqGdUosLSmCMCtGSY&s=10";
 
 // === Hot reload config.js ===
 const file = fileURLToPath(import.meta.url);
