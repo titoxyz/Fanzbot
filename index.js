@@ -132,7 +132,7 @@ async function startWA() {
                     }
                     break
                 case 'remove':
-                    conn.chats = {
+                    metadata = {
                         ...metadata,
                         participants: metadata.participants.filter(p => !participants.includes(p.id))
                     }
