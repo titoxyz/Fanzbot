@@ -3,3 +3,4 @@ sessions
 tmp/*
 *.bak
 *.zip
+.yarn/
