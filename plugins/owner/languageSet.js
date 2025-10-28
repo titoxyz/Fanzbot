@@ -6,7 +6,8 @@ export default {
     owner: true
   },
   run: async (conn, m) => {
-    if (!m.text) return m.reply("Enter the language ID (en, id, es, fr, de, jp, pt)");
+    const Lang = Object.keys(lang.languages).join(', ')
+    if (!m.text) return m.reply(`Enter the language ID (${Lang})`);
     
     try {
       global.lang.setLanguage(m.text);
@@ -14,7 +15,7 @@ export default {
       if (global.lang.defaultLang === m.text) {
         m.reply(`✅ Language successfully changed to: ${m.text}`);
       } else {
-        m.reply(`❌ Language '${m.text}' not found. Available: en, id, es, fr, de, jp, pt`);
+        m.reply(`❌ Language '${m.text}' not found. Available: ${Lang}`);
       }
     } catch (e) {
       m.reply(`❌ Error: ${String(e)}`);
