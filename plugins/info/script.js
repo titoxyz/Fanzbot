@@ -1,6 +1,6 @@
 export default {
     name: "script",
-    category: "utility",
+    category: "info",
     command: ["sc", "script"],
     run: async (conn, m, { Func }) => {
         try {

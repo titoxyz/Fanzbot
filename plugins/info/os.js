@@ -3,7 +3,7 @@ import { performance } from "perf_hooks";
 
 export default {
   name: "os",
-  category: "utility",
+  category: "info",
   command: ["os", "ping"],
   run: async (conn, m, { Func }) => {
     const start = performance.now();
