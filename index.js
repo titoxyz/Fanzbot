@@ -164,7 +164,8 @@ async function startWA() {
     if (m.chat.endsWith('@broadcast') || m.chat.endsWith('@newsletter')) return
     if (m.message && !m.isBot) {
       if (m.type == 'protocolMessage') return
-      await (await import(`./lib/print.js?v=${Date.now()}`)).default(conn, m)
+      await (await import(`#lib/print.js?v=${Date.now()}`)).default(conn, m)
+      console.log("p")
     }
 
     await (await import(`./handler.js?v=${Date.now()}`)).default(conn, m)
@@ -172,4 +173,3 @@ async function startWA() {
 }
 
 startWA()
-process.on('uncaughtException', (err) => log.error(err))

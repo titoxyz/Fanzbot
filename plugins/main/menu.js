@@ -1,6 +1,6 @@
 export default {
   name: "menu",
-  category: "utility",
+  category: "main",
   command: ["menu"],
   run: async (conn, m, { Func }) => {
     let grouped = {}

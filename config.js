@@ -14,7 +14,7 @@ global.PAIRING_NUMBER = 62882003353414;
 global.ownerNumber = ["6287701656619", "6287782304364", "62882005514880"];
 
 // Bot mode: false = self mode (owner only), true = public (accessible to everyone)
-global.public = true;
+global.IS_PUBLIC = true;
 
 // === WhatsApp Status Reader Settings ===
 global.readsw = {

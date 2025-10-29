@@ -13,7 +13,7 @@ export default async function Command(conn, m) {
   const isOwner = m.fromMe || ownerNumber.includes(m.sender.split('@')[0])
 
   if (m.isBot) return
-  if (!public && !isOwner) return
+  if (!IS_PUBLIC && !isOwner) return
 
   const metadata = m.isGroup ? conn.chats[m.chat] || (await conn.groupMetadata(m.chat).catch(() => null)) : {}
   const Admin = m.isGroup && metadata.participants.find(u => conn.getJid(u.id) === m.sender)
