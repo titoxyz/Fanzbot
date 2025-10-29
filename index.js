@@ -163,7 +163,6 @@ async function startWA() {
     if (m.message && !m.isBot) {
       if (m.type === 'protocolMessage') return;
       await (await import(`#lib/print.js?v=${Date.now()}`)).default(conn, m);
-      console.log('p');
     }
 
     await (await import(`./handler.js?v=${Date.now()}`)).default(conn, m);
