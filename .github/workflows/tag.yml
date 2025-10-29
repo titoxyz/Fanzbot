@@ -1,0 +1,62 @@
+name: Patch Version Every 3 Days
+
+on:
+  schedule:
+    - cron: "0 0 */3 * *"
+  workflow_dispatch:
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Check commits from last 3 days
+        id: commits
+        run: |
+          COMMITS=$(git log --since="3 days ago" --pretty=format:"- %s (%h)" --no-merges)
+          if [ -z "$COMMITS" ]; then
+            echo "no_commits=true" >> $GITHUB_ENV
+          else
+            echo "no_commits=false" >> $GITHUB_ENV
+            echo "COMMITS<<EOF" >> $GITHUB_ENV
+            echo "$COMMITS" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          fi
+
+      - name: Bump patch version
+        if: env.no_commits == 'false'
+        run: npm version patch -m "chore(release): bump version to %s"
+
+      - name: Append commit list to tag message
+        if: env.no_commits == 'false'
+        run: |
+          TAG=$(git describe --tags --abbrev=0)
+          MESSAGE="Commits from last 3 days:
+
+$COMMITS"
+          git tag -f -a "$TAG" -m "chore(release): bump version to $TAG
+
+$MESSAGE"
+          git push origin "$TAG" --force
+
+      - name: Push changes
+        if: env.no_commits == 'false'
+        run: |
+          git push origin HEAD
