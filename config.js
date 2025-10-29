@@ -4,40 +4,40 @@ import path from "path";
 import log from "#lib/logger.js";
 import { LanguageManager } from "#lib/LanguageManager.js";
 
-// === Konfigurasi umum ===
+// === General Configuration ===
 
-// Nomor pairing (untuk scan QR/Pairing code)
+// Pairing number (used for QR/Pairing code scanning)
 global.PAIRING_NUMBER = 6282381978401;
-//global.PAIRING_NUMBER = 62882003353414;
+// global.PAIRING_NUMBER = 62882003353414;
 
-// Nomor owner utama + cadangan
+// Main and backup owner numbers
 global.ownerNumber = ["6287701656619", "6287782304364", "62882005514880"];
 
-// Mode bot: false = self mode (hanya owner), true = public (semua user)
+// Bot mode: false = self mode (owner only), true = public (accessible to everyone)
 global.public = true;
 
-// Konfigurasi baca status WA
+// === WhatsApp Status Reader Settings ===
 global.readsw = {
   active: true,
   react: false,
   emoji: ["🔥", "💀", "☠️", "🥀", "🥶"],
 };
 
-// === Sistem Multi-Language ===
+// === Multi-Language System ===
 
-// Inisialisasi LanguageManager
-const langManager = new LanguageManager("id"); // ubah default ke 'en' jika mau English
+// Initialize LanguageManager (default language: 'id')
+const langManager = new LanguageManager("id");
 
-// Set bahasa aktif (bisa diubah sesuai kebutuhan)
+// Set the active language (change to 'en' for English)
 langManager.setLanguage("id");
 
-// Shortcut agar mudah digunakan di mana pun
-global.lang = langManager; 
+// Shortcut for easier global access
+global.lang = langManager;
 
-// Fungsi helper untuk ambil pesan bahasa aktif
+// Helper messages for the active language
 global.mess = {
   wait: lang.get("mess.wait"),
-  owner:  lang.get("mess.owner"),
+  owner: lang.get("mess.owner"),
   group: lang.get("mess.group"),
   admin: lang.get("mess.admin"),
   botAdmin: lang.get("mess.botAdmin"),
@@ -52,10 +52,10 @@ global.title = "ESEMPE-MD";
 global.body = "Apcb";
 global.thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaK3_60MiEWpItg8BbrvcF4Be_vgIDd8Ggj13AYkPqGdUosLSmCMCtGSY&s=10";
 
-// === Hot reload config.js ===
+// === Hot Reload for config.js ===
 const file = fileURLToPath(import.meta.url);
 watchFile(file, () => {
   unwatchFile(file);
-  log.info("✅ config.js berhasil direload.");
+  log.info("✅ config.js reloaded successfully.");
   import(`${file}?update=${Date.now()}`);
 });
