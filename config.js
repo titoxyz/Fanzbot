@@ -14,7 +14,7 @@ global.PAIRING_NUMBER = 6282381978401;
 global.ownerNumber = ["6287701656619", "6287782304364", "62882005514880"];
 
 // Mode bot: false = self mode (hanya owner), true = public (semua user)
-global.pubelik = true;
+global.public = true;
 
 // Konfigurasi baca status WA
 global.readsw = {

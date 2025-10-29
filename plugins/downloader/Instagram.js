@@ -4,6 +4,9 @@ export default {
     name: "instagram",
     category: "downloader",
     command: ["igdl", "ig"],
+    settings: {
+      loading: true
+    }
     run: async (conn, m) => {
         try {
             const input = m.isQuoted ? m.quoted.text : m.text;

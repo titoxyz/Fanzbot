@@ -4,6 +4,9 @@ export default {
   name: "tiktok",
   category: "downloader",
   command: ["tt", "tiktok"],
+  settings: {
+    loading: true
+  }
   run: async (conn, m, { Func }) => {
     try {
       const input = m.isQuoted ? m.quoted.body : m.text;
