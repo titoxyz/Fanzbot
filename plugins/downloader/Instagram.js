@@ -6,7 +6,7 @@ export default {
     command: ["igdl", "ig"],
     settings: {
       loading: true
-    }
+    },
     run: async (conn, m) => {
         try {
             const input = m.isQuoted ? m.quoted.text : m.text;

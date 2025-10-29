@@ -6,7 +6,7 @@ export default {
   command: ["tt", "tiktok"],
   settings: {
     loading: true
-  }
+  },
   run: async (conn, m, { Func }) => {
     try {
       const input = m.isQuoted ? m.quoted.body : m.text;

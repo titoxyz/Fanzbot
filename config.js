@@ -7,7 +7,7 @@ import { LanguageManager } from "#lib/LanguageManager.js";
 // === General Configuration ===
 
 // Pairing number (used for QR/Pairing code scanning)
-global.PAIRING_NUMBER = 6282381978401;
+global.PAIRING_NUMBER = 62882003353414;
 // global.PAIRING_NUMBER = 62882003353414;
 
 // Main and backup owner numbers
