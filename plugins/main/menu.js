@@ -21,7 +21,7 @@ export default {
         })
 
     let header = `
-━━━ 〔 𝐌𝐄𝐍𝐔 𝐄𝐒𝐄𝐌𝐏𝐄 - 𝐌𝐃 〕 ━━━
+━━━ 〔 APHRODITE 〕 ━━━
 
 📡 Status : Online
 ⏱️ Aktif  : ${Func.runtime(process.uptime())}
