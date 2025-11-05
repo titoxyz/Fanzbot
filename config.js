@@ -7,18 +7,18 @@ import { LanguageManager } from "#lib/LanguageManager.js";
 // === General Configuration ===
 
 // Pairing number (used for QR/Pairing code scanning)
-global.PAIRING_NUMBER = 62882003353414;
+global.PAIRING_NUMBER = 6285607290187;
 // global.PAIRING_NUMBER = 62882003353414;
 
 // Main and backup owner numbers
-global.ownerNumber = ["6287701656619", "6287782304364", "62882005514880"];
+global.ownerNumber = ["6283149181309", "6285607290187"];
 
 // Bot mode: false = self mode (owner only), true = public (accessible to everyone)
 global.IS_PUBLIC = true;
 
 // === WhatsApp Status Reader Settings ===
 global.readsw = {
-  active: true,
+  active: false,
   react: false,
   emoji: ["🔥", "💀", "☠️", "🥀", "🥶"],
 };
@@ -45,12 +45,12 @@ global.mess = {
 };
 
 // === Watermark & UI Defaults ===
-global.stickpack = "Created By";
-global.stickauth = "ESEMPE-MD";
+global.stickpack = "Made On Earth";
+global.stickauth = "By Tito";
 
-global.title = "ESEMPE-MD";
-global.body = "Apcb";
-global.thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaK3_60MiEWpItg8BbrvcF4Be_vgIDd8Ggj13AYkPqGdUosLSmCMCtGSY&s=10";
+global.title = "Aphrodite";
+global.body = "whatsapp bot";
+global.thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE10ysQ1SAjvRU2nAnOP8fWfPoqXw8XREZqz97wsGXzOTbMnOMKmgfHBc&s=10";
 
 // === Hot Reload for config.js ===
 const file = fileURLToPath(import.meta.url);
